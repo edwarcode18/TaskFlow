@@ -1,5 +1,6 @@
 ---
 name: Feature
+
 title: 'feat: [Nombre breve]'
 labels: 'feature'
 assignees: ''

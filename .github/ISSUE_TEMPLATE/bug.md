@@ -1,5 +1,6 @@
 ---
 name: Bug
+
 title: 'fix: [Descripción breve]'
 labels: 'bug'
 assignees: ''

@@ -1,9 +1,11 @@
 ---
 name: Task
-title: 'task: [Nombre breve]'
-labels: 'task'
-assignees: ''
+about: Plantilla para tareas técnicas
+title: "task: [Nombre breve]"
+labels: "task"
+assignees: ""
 ---
+
 ## 📌 Objetivo
 
 Ej: "Configurar Docker para desarrollo local".
