@@ -1,10 +1,11 @@
 ---
 name: Bug
-
-title: 'fix: [Descripción breve]'
-labels: 'bug'
-assignees: ''
+about: Plantilla para reportar errores
+title: "fix: [Descripción breve]"
+labels: "bug"
+assignees: ""
 ---
+
 ## 🐞 Comportamiento Actual
 
 Ej: "El botón de 'Eliminar tarea' no envía el ID correcto al backend".

@@ -1,9 +1,9 @@
 ---
 name: Feature
-
-title: 'feat: [Nombre breve]'
-labels: 'feature'
-assignees: ''
+about: Plantilla para nuevas funcionalidades
+title: "feat: [Nombre breve]"
+labels: "feature"
+assignees: ""
 ---
 ## 🎯 Descripción
 
