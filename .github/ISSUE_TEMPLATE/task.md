@@ -6,9 +6,7 @@ labels: "task"
 assignees: ""
 ---
 
-## 📌 Objetivo
-
-Ej: "Configurar Docker para desarrollo local".
+## 📌 ObjetivoEj: "Configurar Docker para desarrollo local".
 
 ## 📋 Pasos
 
