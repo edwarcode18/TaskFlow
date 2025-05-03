@@ -1,0 +1,63 @@
+name: Lint and Test
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+
+jobs:
+  backend:
+    name: Backend Lint & Test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint backend
+        run: |
+          if [ -f eslint.config.js ]; then
+            npm run lint || true
+          else
+            echo "No lint config found."
+          fi
+
+      - name: Test backend
+        run: npm test
+
+  frontend:
+    name: Frontend Lint & Build Test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint frontend
+        run: npm run lint
+
+      - name: Build to test errors
+        run: npm run build
