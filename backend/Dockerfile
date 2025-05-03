@@ -5,7 +5,5 @@ COPY backend/package*.json ./
 RUN npm install
 COPY backend/ .
 
-RUN npx tsc
-
 EXPOSE 3000
-CMD ["npx", "ts-node-dev", "src/index.ts"]
+CMD ["npx", "ts-node-dev", "--respawn", "--transpile-only", "src/index.ts"]

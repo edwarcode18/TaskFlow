@@ -21,6 +21,10 @@ app.get("/", (_req, res) => {
   res.send("TaskFlow Backend funcionando");
 });
 
+app.get("/ping", (_req, res) => {
+  res.status(200).json({ message: "pong" });
+});
+
 app.listen(PORT, () => {
   console.log(`Servidor backend corriendo en http://localhost:${PORT}`);
 });

@@ -22,6 +22,8 @@ services:
       - MONGO_URI=mongodb://mongo:27017/taskflow
     depends_on:
       - mongo
+    volumes:
+      - ./backend:/app
 
   mongo:
     image: mongo:5.0
