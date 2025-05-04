@@ -2,6 +2,8 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
+import helmet from "helmet";
+import morgan from "morgan";
 
 dotenv.config();
 
@@ -11,6 +13,8 @@ const MONGO_URI = process.env.MONGO_URI || "";
 
 app.use(cors());
 app.use(express.json());
+app.use(helmet());
+app.use(morgan("dev"));
 
 mongoose
   .connect(MONGO_URI)
