@@ -4,31 +4,49 @@ import cors from "cors";
 import dotenv from "dotenv";
 import helmet from "helmet";
 import morgan from "morgan";
+import userRoutes from "./routes/user.route";
+import { errorMiddleware } from "./middlewares/error.middleware";
 
 dotenv.config();
 
-const app = express();
-const PORT = process.env.PORT || 3000;
-const MONGO_URI = process.env.MONGO_URI || "";
+class App {
+  public app: express.Application;
 
-app.use(cors());
-app.use(express.json());
-app.use(helmet());
-app.use(morgan("dev"));
+  constructor() {
+    this.app = express();
+    this.config();
+    this.connectDatabase();
+    this.routes();
+  }
 
-mongoose
-  .connect(MONGO_URI)
-  .then(() => console.log("Conexión exitosa a MongoDB"))
-  .catch((err) => console.error("Error al conectar con MongoDB:", err));
+  private config(): void {
+    this.app.use(cors());
+    this.app.use(express.json());
+    this.app.use(helmet());
+    this.app.use(morgan("dev"));
+  }
 
-app.get("/", (_req, res) => {
-  res.send("TaskFlow Backend funcionando");
-});
+  private connectDatabase(): void {
+    const MONGO_URI = process.env.MONGO_URI || "";
+    mongoose
+      .connect(MONGO_URI)
+      .then(() => console.log("Connected to MongoDB"))
+      .catch((err) => console.error("MongoDB connection error:", err));
+  }
 
-app.get("/ping", (_req, res) => {
-  res.status(200).json({ message: "pong" });
-});
+  private routes(): void {
+    this.app.use("/api/v1/users", userRoutes);
 
-app.listen(PORT, () => {
-  console.log(`Servidor backend corriendo en http://localhost:${PORT}`);
-});
+    this.app.use(errorMiddleware);
+  }
+
+  public start(): void {
+    const PORT = process.env.PORT || 3000;
+    this.app.listen(PORT, () => {
+      console.log(`Server running on http://localhost:${PORT}`);
+    });
+  }
+}
+
+const app = new App();
+app.start();

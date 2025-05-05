@@ -1,25 +1,13 @@
-import { Schema, model, Document } from "mongoose";
+import { Schema, model } from "mongoose";
+import { IUserDocument } from "../interfaces/user.interface";
 import validator from "validator";
 import PasswordValidator from "password-validator";
-import bcrypt from "bcrypt";
-
-type Language = "es" | "en";
-type Role = "admin" | "user" | "guest";
-
-export interface IUser extends Document {
-  name: string;
-  email: string;
-  password: string;
-  language: Language;
-  role: Role;
-  createdAt: Date;
-  updatedAt: Date;
-}
+import bcrypt from "bcryptjs";
 
 const schema = new PasswordValidator();
 schema.is().min(6).has().uppercase().has().lowercase().has().digits();
 
-const userSchema = new Schema<IUser>(
+const userSchema = new Schema<IUserDocument>(
   {
     name: {
       type: String,
@@ -59,19 +47,29 @@ const userSchema = new Schema<IUser>(
     }
   },
   {
-    timestamps: true
+    timestamps: true,
+    versionKey: false,
+    toJSON: {
+      transform: (_, ret) => {
+        delete ret.password;
+        return ret;
+      }
+    }
   }
 );
 
-userSchema.pre("save", async function (next) {
+userSchema.index({ email: 1 }, { unique: true });
+
+userSchema.pre<IUserDocument>("save", async function (next) {
   if (!this.isModified("password")) return next();
+
   try {
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
     next();
   } catch (error) {
-    next(error as any);
+    next(new Error("Password hashing failed"));
   }
 });
 
-export const User = model<IUser>("User", userSchema);
+export const User = model<IUserDocument>("User", userSchema);
