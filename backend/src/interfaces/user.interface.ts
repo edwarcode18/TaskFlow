@@ -9,6 +9,8 @@ export interface IUser {
   password: string;
   language?: Language;
   role?: Role;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface IUserDocument extends IUser, Document {
