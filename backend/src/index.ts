@@ -6,6 +6,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 import userRoutes from "./routes/user.route";
 import projectRoutes from "./routes/project.route";
+import taskRoutes from "./routes/task.route";
 import { errorMiddleware } from "./middlewares/error.middleware";
 
 dotenv.config();
@@ -38,6 +39,7 @@ class App {
   private routes(): void {
     this.app.use("/api/v1/users", userRoutes);
     this.app.use("/api/v1/projects", projectRoutes);
+    this.app.use("/api/v1/tasks", taskRoutes);
 
     this.app.use(errorMiddleware);
   }

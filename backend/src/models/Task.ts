@@ -1,21 +1,7 @@
-import { Schema, model, Document, Types } from "mongoose";
+import { Schema, model } from "mongoose";
+import { ITask, ITaskDocument } from "../interfaces/task.interface";
 
-type Status = "todo" | "in-progress" | "done";
-type Priority = "low" | "medium" | "high";
-
-export interface ITask extends Document {
-  title: string;
-  description: string;
-  status: Status;
-  priority: Priority;
-  dueDate?: Date;
-  assignee: Types.ObjectId;
-  projectId: Types.ObjectId;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-const taskSchema = new Schema<ITask>(
+const taskSchema = new Schema<ITaskDocument>(
   {
     title: {
       type: String,
@@ -62,4 +48,4 @@ const taskSchema = new Schema<ITask>(
   }
 );
 
-export const Task = model<ITask>("Task", taskSchema);
+export const Task = model<ITaskDocument>("Task", taskSchema);
