@@ -1,17 +1,7 @@
-import { Schema, model, Document, Types } from "mongoose";
+import { Schema, model } from "mongoose";
+import { IUserProjectDocument } from "../interfaces/userProject.interface";
 
-type RoleInProject = "owner" | "member" | "guest";
-
-export interface IUserProject extends Document {
-  userId: Types.ObjectId;
-  projectId: Types.ObjectId;
-  roleInProject: RoleInProject;
-  joinedAt?: Date;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-const userProjectSchema = new Schema<IUserProject>(
+const userProjectSchema = new Schema<IUserProjectDocument>(
   {
     userId: {
       type: Schema.Types.ObjectId,
@@ -40,7 +30,7 @@ const userProjectSchema = new Schema<IUserProject>(
 
 userProjectSchema.index({ userId: 1, projectId: 1 }, { unique: true });
 
-export const UserProject = model<IUserProject>(
+export const UserProject = model<IUserProjectDocument>(
   "UserProject",
   userProjectSchema
 );
