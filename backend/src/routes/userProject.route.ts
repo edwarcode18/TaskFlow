@@ -6,22 +6,35 @@ import {
   updateUserProjectSchema,
   idParamSchema
 } from "../schemas/userProject.schema";
+import { authenticate } from "../middlewares/auth.middleware";
 
 const router = Router();
 const controller = new UserProjectController();
 
-router.get("/", controller.getAllUserProjects);
-router.get("/:id", zodValidate(idParamSchema), controller.getUserProjectById);
+router.get("/", authenticate, controller.getAllUserProjects);
+router.get(
+  "/:id",
+  authenticate,
+  zodValidate(idParamSchema),
+  controller.getUserProjectById
+);
 router.post(
   "/",
+  authenticate,
   zodValidate(createUserProjectSchema),
   controller.createUserProject
 );
 router.put(
   "/:id",
+  authenticate,
   zodValidate(updateUserProjectSchema),
   controller.updateUserProject
 );
-router.delete("/:id", zodValidate(idParamSchema), controller.deleteUserProject);
+router.delete(
+  "/:id",
+  authenticate,
+  zodValidate(idParamSchema),
+  controller.deleteUserProject
+);
 
 export default router;

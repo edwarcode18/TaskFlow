@@ -6,14 +6,15 @@ import {
   updateTaskSchema,
   idParamSchema
 } from "../schemas/task.schema";
+import { authenticate } from "../middlewares/auth.middleware";
 
 const router = Router();
 const controller = new TaskController();
 
-router.get("/", controller.getAllTask);
-router.get("/:id", zodValidate(idParamSchema), controller.getTasksById);
-router.post("/", zodValidate(createTaskSchema), controller.createTask);
-router.put("/:id", zodValidate(updateTaskSchema), controller.updateTask);
-router.delete("/:id", zodValidate(idParamSchema), controller.deleteTask);
+router.get("/", authenticate, controller.getAllTask);
+router.get("/:id", authenticate, zodValidate(idParamSchema), controller.getTasksById);
+router.post("/", authenticate, zodValidate(createTaskSchema), controller.createTask);
+router.put("/:id", authenticate, zodValidate(updateTaskSchema), controller.updateTask);
+router.delete("/:id", authenticate, zodValidate(idParamSchema), controller.deleteTask);
 
 export default router;

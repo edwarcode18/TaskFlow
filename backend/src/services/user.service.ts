@@ -1,5 +1,5 @@
 import * as Boom from "@hapi/boom";
-import { IUser, IUserResponse } from "../interfaces/user.interface";
+import { IUser, IUserDocument, IUserResponse } from "../interfaces/user.interface";
 import { User } from "../models/User";
 
 export class UserService {
@@ -18,6 +18,12 @@ export class UserService {
     const user = await User.findOne({ email }).select("-password");
     if (!user) throw Boom.notFound("User not found");
     return user?.toObject();
+  }
+
+  public async findUserByEmailWithPassword(
+    email: string
+  ): Promise<IUserDocument | null> {
+    return User.findOne({ email }).select("+password");
   }
 
   public async createUser(userData: IUser): Promise<IUserResponse> {
