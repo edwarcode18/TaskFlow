@@ -1,5 +1,9 @@
 import * as Boom from "@hapi/boom";
-import { IUser, IUserDocument, IUserResponse } from "../interfaces/user.interface";
+import {
+  IUser,
+  IUserDocument,
+  IUserResponse
+} from "../interfaces/user.interface";
 import { User } from "../models/User";
 
 export class UserService {
@@ -9,21 +13,21 @@ export class UserService {
   }
 
   public async findUserById(id: string): Promise<IUserResponse> {
-    const user = await User.findById(id).select("-password");
+    const user = await User.findById(id).select("-password").lean();
     if (!user) throw Boom.notFound("User not found");
-    return user.toObject();
+    return user;
   }
 
   public async findUserByEmail(email: string): Promise<IUserResponse | null> {
-    const user = await User.findOne({ email }).select("-password");
+    const user = await User.findOne({ email }).select("-password").lean();
     if (!user) throw Boom.notFound("User not found");
-    return user?.toObject();
+    return user;
   }
 
   public async findUserByEmailWithPassword(
     email: string
   ): Promise<IUserDocument | null> {
-    return User.findOne({ email }).select("+password");
+    return User.findOne({ email }).select("+password").lean();
   }
 
   public async createUser(userData: IUser): Promise<IUserResponse> {
@@ -40,11 +44,11 @@ export class UserService {
     id: string,
     data: Partial<IUser>
   ): Promise<IUserResponse> {
-    const user = await User.findByIdAndUpdate(id, data, { new: true }).select(
-      "-password"
-    );
+    const user = await User.findByIdAndUpdate(id, data, { new: true })
+      .select("-password")
+      .lean();
     if (!user) throw Boom.notFound("User not found");
-    return user.toObject();
+    return user;
   }
 
   public async deleteUser(id: string): Promise<void> {

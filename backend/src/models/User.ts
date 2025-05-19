@@ -1,8 +1,8 @@
-import { Schema, model } from "mongoose";
-import { IUserDocument } from "../interfaces/user.interface";
-import validator from "validator";
-import PasswordValidator from "password-validator";
 import bcrypt from "bcryptjs";
+import { Schema, model } from "mongoose";
+import PasswordValidator from "password-validator";
+import validator from "validator";
+import { IUserDocument } from "../interfaces/user.interface";
 
 const schema = new PasswordValidator();
 schema.is().min(6).has().uppercase().has().lowercase().has().digits();
@@ -57,8 +57,6 @@ const userSchema = new Schema<IUserDocument>(
     }
   }
 );
-
-userSchema.index({ email: 1 }, { unique: true });
 
 userSchema.pre<IUserDocument>("save", async function (next) {
   if (!this.isModified("password")) return next();
