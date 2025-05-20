@@ -52,7 +52,7 @@ describe("ProjectService", () => {
       });
     });
 
-    it("should throw notFound error if project not found", async () => {
+    it("should throw not Found error if project not found", async () => {
       mockedProject.findById.mockResolvedValue(null);
       await expect(service.findProjectById("999")).rejects.toThrow(
         Boom.notFound("Project not found")
@@ -103,7 +103,7 @@ describe("ProjectService", () => {
       toObject: jest.fn().mockReturnValue({
         _id: "1",
         ...update,
-        owner: "ownerId"
+        owner: "1"
       })
     };
 
@@ -113,11 +113,11 @@ describe("ProjectService", () => {
       expect(result).toEqual({
         _id: "1",
         ...update,
-        owner: "ownerId"
+        owner: "1"
       });
     });
 
-    it("should throw notFound error if project not found", async () => {
+    it("should throw not Found error if project not found", async () => {
       mockedProject.findByIdAndUpdate.mockResolvedValue(null);
       await expect(service.updateProject("999", update)).rejects.toThrow(
         Boom.notFound("Project not found")
@@ -132,7 +132,7 @@ describe("ProjectService", () => {
       expect(mockedProject.findByIdAndDelete).toHaveBeenCalledWith("1");
     });
 
-    it("should throw notFound error if project not found", async () => {
+    it("should throw not Found error if project not found", async () => {
       mockedProject.findByIdAndDelete.mockResolvedValue(null);
       await expect(service.deleteProject("999")).rejects.toThrow(
         Boom.notFound("Project not found")
