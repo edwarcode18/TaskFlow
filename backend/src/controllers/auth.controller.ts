@@ -12,14 +12,13 @@ export class AuthController {
       const { email, password } = req.body;
 
       const user = await this.userService.findUserByEmailWithPassword(email);
+      if (!process.env.JWT_SECRET) {
+        throw new Error("JWT_SECRET is not defined in environment variables");
+      }
       if (!user) throw Boom.unauthorized("Credenciales inválidas");
 
       const passwordMatch = await bcrypt.compare(password, user.password);
       if (!passwordMatch) throw Boom.unauthorized("Credenciales inválidas");
-
-      if (!process.env.JWT_SECRET) {
-        throw new Error("JWT_SECRET is not defined in environment variables");
-      }
 
       const jwtSecret: Secret = process.env.JWT_SECRET;
       const jwtOptions: SignOptions = {

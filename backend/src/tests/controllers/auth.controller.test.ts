@@ -1,100 +1,144 @@
-import { Request, Response, NextFunction } from "express";
-import { AuthController } from "../../controllers/auth.controller";
-import { UserService } from "../../services/user.service";
+import * as Boom from "@hapi/boom";
 import bcrypt from "bcryptjs";
+import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import { AuthController } from "../../../src/controllers/auth.controller";
+import { UserService } from "../../../src/services/user.service";
 
-describe("AuthController", () => {
-  it("should pass a dummy test", () => {
-    expect(true).toBe(true);
-  });
-});
-/*
-jest.mock("../../../services/user.service");
+jest.mock("../../../src/services/user.service");
 jest.mock("bcryptjs");
 jest.mock("jsonwebtoken");
 
-describe("AuthController - login", () => {
-  let authController: AuthController;
-  let req: Partial<Request>;
-  let res: Partial<Response>;
-  let next: NextFunction;
+describe("AuthController", () => {
+  const authController = new AuthController();
+  const mockedUserService = UserService as jest.MockedClass<typeof UserService>;
+
+  const mockUser = {
+    _id: "123",
+    email: "test@example.com",
+    password: "hashedPassword",
+    name: "Test User",
+    role: "admin"
+  };
+
+  const req = {
+    body: {
+      email: mockUser.email,
+      password: "plaintextPassword"
+    }
+  } as unknown as Request;
+
+  const res = {
+    json: jest.fn()
+  } as unknown as Response;
+
+  const next = jest.fn() as NextFunction;
 
   beforeEach(() => {
-    authController = new AuthController();
-
-    req = {
-      body: {
-        email: "test@example.com",
-        password: "password123"
-      }
-    };
-
-    res = {
-      json: jest.fn(),
-      status: jest.fn().mockReturnThis()
-    };
-
-    next = jest.fn();
+    jest.clearAllMocks();
+    process.env.JWT_SECRET = "testsecret";
+    process.env.JWT_EXPIRES_IN = "1h";
   });
 
-  it("debe responder con token y usuario si las credenciales son correctas", async () => {
-    const mockUser = {
-      _id: "123",
-      email: "test@example.com",
-      role: "user",
-      password: "hashedpassword"
-    };
-
-    // Mock del servicio
+  it("should login successfully and return a token and user info", async () => {
     (
-      UserService.prototype.findUserByEmailWithPassword as jest.Mock
+      mockedUserService.prototype.findUserByEmailWithPassword as jest.Mock
     ).mockResolvedValue(mockUser);
+
     (bcrypt.compare as jest.Mock).mockResolvedValue(true);
-    (jwt.sign as jest.Mock).mockReturnValue("mocked-token");
+    (jwt.sign as jest.Mock).mockReturnValue("mockedToken");
 
-    process.env.JWT_SECRET = "test-secret";
-    process.env.JWT_EXPIRES_IN = "1h";
+    await authController.login(req, res, next);
 
-    await authController.login(req as Request, res as Response, next);
-
+    expect(
+      mockedUserService.prototype.findUserByEmailWithPassword
+    ).toHaveBeenCalledWith(mockUser.email);
+    expect(bcrypt.compare).toHaveBeenCalledWith(
+      "plaintextPassword",
+      mockUser.password
+    );
+    expect(jwt.sign).toHaveBeenCalled();
     expect(res.json).toHaveBeenCalledWith({
       success: true,
-      token: "mocked-token",
+      token: "mockedToken",
       user: {
         _id: mockUser._id,
         email: mockUser.email,
+        name: mockUser.name,
         role: mockUser.role
       }
     });
   });
 
-  it("debe llamar a next con error si el usuario no existe", async () => {
+  it("should throw unauthorized error if user not found", async () => {
     (
-      UserService.prototype.findUserByEmailWithPassword as jest.Mock
+      mockedUserService.prototype.findUserByEmailWithPassword as jest.Mock
     ).mockResolvedValue(null);
 
-    await authController.login(req as Request, res as Response, next);
+    await authController.login(req, res, next);
 
-    expect(next).toHaveBeenCalledWith(expect.any(Error));
+    expect(next).toHaveBeenCalledWith(
+      Boom.unauthorized("Credenciales inválidas")
+    );
   });
 
-  it("debe llamar a next con error si la contraseña es incorrecta", async () => {
-    const mockUser = {
-      _id: "123",
-      email: "test@example.com",
-      role: "user",
-      password: "hashedpassword"
-    };
-
+  it("should throw unauthorized error if password is invalid", async () => {
     (
-      UserService.prototype.findUserByEmailWithPassword as jest.Mock
+      mockedUserService.prototype.findUserByEmailWithPassword as jest.Mock
     ).mockResolvedValue(mockUser);
     (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
-    await authController.login(req as Request, res as Response, next);
+    await authController.login(req, res, next);
+
+    expect(next).toHaveBeenCalledWith(
+      Boom.unauthorized("Credenciales inválidas")
+    );
+  });
+
+  it("should throw error if JWT_SECRET is not defined", async () => {
+    delete process.env.JWT_SECRET;
+
+    (
+      mockedUserService.prototype.findUserByEmailWithPassword as jest.Mock
+    ).mockResolvedValue(mockUser);
+    (bcrypt.compare as jest.Mock).mockResolvedValue(true);
+
+    await authController.login(req, res, next);
+
+    expect(next).toHaveBeenCalledWith(
+      new Error("JWT_SECRET is not defined in environment variables")
+    );
+  });
+
+  it("should use default expiresIn if JWT_EXPIRES_IN is not defined", async () => {
+    delete process.env.JWT_EXPIRES_IN;
+
+    (
+      mockedUserService.prototype.findUserByEmailWithPassword as jest.Mock
+    ).mockResolvedValue(mockUser);
+
+    (bcrypt.compare as jest.Mock).mockResolvedValue(true);
+    (jwt.sign as jest.Mock).mockReturnValue("mockedToken");
+
+    await authController.login(req, res, next);
+
+    expect(jwt.sign).toHaveBeenCalledWith(
+      expect.any(Object),
+      process.env.JWT_SECRET,
+      expect.objectContaining({ expiresIn: "1h" })
+    );
+  });
+
+  it("should call next with unexpected errors", async () => {
+    const error = new Error("Unexpected");
+    (
+      mockedUserService.prototype.findUserByEmailWithPassword as jest.Mock
+    ).mockRejectedValue(error);
+
+    await authController.login(req, res, next);
+
+    expect(next).toHaveBeenCalledTimes(1);
 
     expect(next).toHaveBeenCalledWith(expect.any(Error));
   });
 });
-*/
