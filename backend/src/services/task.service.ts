@@ -1,6 +1,6 @@
 import * as Boom from "@hapi/boom";
-import { ITask, ITaskResponse } from "../interfaces/task.interface";
 import { Types } from "mongoose";
+import { ITask, ITaskResponse } from "../interfaces/task.interface";
 import { Task } from "../models/Task";
 
 type Status = "todo" | "in-progress" | "done";

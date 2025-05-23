@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction } from "express";
 import * as Boom from "@hapi/boom";
-import jwt, { Secret, SignOptions } from "jsonwebtoken";
 import bcrypt from "bcryptjs";
+import { NextFunction, Request, Response } from "express";
+import jwt, { Secret, SignOptions } from "jsonwebtoken";
 import { UserService } from "../services/user.service";
 
 export class AuthController {

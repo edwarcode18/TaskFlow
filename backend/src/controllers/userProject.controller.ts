@@ -1,10 +1,10 @@
+import { NextFunction, Request, Response } from "express";
 import { Types } from "mongoose";
-import { Request, Response, NextFunction } from "express";
-import { UserProjectService } from "../services/userProject.service";
 import {
   CreateUserProjectInput,
   UpdateUserProjectInput
 } from "../schemas/userProject.schema";
+import { UserProjectService } from "../services/userProject.service";
 
 export class UserProjectController {
   private service = new UserProjectService();

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
+import { Types } from "mongoose";
 import { TaskController } from "../../controllers/task.controller";
 import { TaskService } from "../../services/task.service";
-import { Types } from "mongoose";
 
 jest.mock("../../services/task.service");
 

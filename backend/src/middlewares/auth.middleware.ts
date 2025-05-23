@@ -1,7 +1,6 @@
-import { Request, Response, NextFunction } from "express";
 import * as Boom from "@hapi/boom";
+import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { IUserDocument } from "../interfaces/user.interface";
 
 declare module "express" {
   interface Request {

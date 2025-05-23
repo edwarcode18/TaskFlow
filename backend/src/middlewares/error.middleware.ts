@@ -1,5 +1,5 @@
-import { NextFunction, Request, Response } from "express";
 import * as Boom from "@hapi/boom";
+import { NextFunction, Request, Response } from "express";
 
 export const errorMiddleware = (
   err: Error | Boom.Boom,

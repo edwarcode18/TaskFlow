@@ -1,6 +1,6 @@
+import * as Boom from "@hapi/boom";
 import { RequestHandler } from "express";
 import { AnyZodObject, ZodError } from "zod";
-import * as Boom from "@hapi/boom";
 
 export const zodValidate = (schema: AnyZodObject): RequestHandler => {
   return (req, _res, next) => {

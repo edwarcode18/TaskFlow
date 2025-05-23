@@ -1,12 +1,12 @@
 import { Router } from "express";
 import { TaskController } from "../controllers/task.controller";
+import { authenticate } from "../middlewares/auth.middleware";
 import { zodValidate } from "../middlewares/zodValidate.middleware";
 import {
   createTaskSchema,
-  updateTaskSchema,
-  idParamSchema
+  idParamSchema,
+  updateTaskSchema
 } from "../schemas/task.schema";
-import { authenticate } from "../middlewares/auth.middleware";
 
 const router = Router();
 const controller = new TaskController();

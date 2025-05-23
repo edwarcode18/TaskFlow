@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from "express";
-import { UserService } from "../services/user.service";
+import { NextFunction, Request, Response } from "express";
 import { CreateUserInput, UpdateUserInput } from "../schemas/user.schema";
+import { UserService } from "../services/user.service";
 
 export class UserController {
   private service = new UserService();

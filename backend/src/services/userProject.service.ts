@@ -1,9 +1,9 @@
 import * as Boom from "@hapi/boom";
+import { Types } from "mongoose";
 import {
   IUserProject,
   IUserProjectResponse
 } from "../interfaces/userProject.interface";
-import { Types } from "mongoose";
 import { UserProject } from "../models/UserProject";
 
 type RoleInProject = "owner" | "member" | "guest";

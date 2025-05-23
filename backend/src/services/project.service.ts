@@ -1,7 +1,7 @@
 import * as Boom from "@hapi/boom";
+import { Types } from "mongoose";
 import { IProject, IProjectResponse } from "../interfaces/project.interface";
 import { Project } from "../models/Project";
-import { Types } from "mongoose";
 
 export class ProjectService {
   public async findAllProjects(): Promise<IProjectResponse[]> {

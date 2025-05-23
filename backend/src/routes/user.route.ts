@@ -1,12 +1,12 @@
 import { Router } from "express";
 import { UserController } from "../controllers/user.controller";
+import { authenticate } from "../middlewares/auth.middleware";
 import { zodValidate } from "../middlewares/zodValidate.middleware";
 import {
   createUserSchema,
-  updateUserSchema,
-  idParamSchema
+  idParamSchema,
+  updateUserSchema
 } from "../schemas/user.schema";
-import { authenticate } from "../middlewares/auth.middleware";
 
 const router = Router();
 const controller = new UserController();

@@ -1,7 +1,7 @@
-import { UserService } from "../../../src/services/user.service";
-import { User } from "../../../src/models/User";
 import * as Boom from "@hapi/boom";
 import { IUser } from "../../../src/interfaces/user.interface";
+import { User } from "../../../src/models/User";
+import { UserService } from "../../../src/services/user.service";
 
 jest.mock("../../../src/models/User");
 const mockedUser = User as jest.Mocked<typeof User>;

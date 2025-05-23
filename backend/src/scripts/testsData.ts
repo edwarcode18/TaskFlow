@@ -1,8 +1,8 @@
-import { User } from "../models/User";
-import { Task } from "../models/Task";
-import { Project } from "../models/Project";
-import { UserProject } from "../models/UserProject";
 import mongoose from "mongoose";
+import { Project } from "../models/Project";
+import { Task } from "../models/Task";
+import { User } from "../models/User";
+import { UserProject } from "../models/UserProject";
 
 async function crearDatosDePrueba() {
   await mongoose.connect("mongodb://localhost:27017/taskflow");

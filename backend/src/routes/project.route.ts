@@ -1,12 +1,12 @@
 import { Router } from "express";
 import { ProjectController } from "../controllers/project.controller";
+import { authenticate } from "../middlewares/auth.middleware";
 import { zodValidate } from "../middlewares/zodValidate.middleware";
 import {
   createProjectSchema,
-  updateProjectSchema,
-  idParamSchema
+  idParamSchema,
+  updateProjectSchema
 } from "../schemas/project.schema";
-import { authenticate } from "../middlewares/auth.middleware";
 
 const router = Router();
 const controller = new ProjectController();
